@@ -1,0 +1,34 @@
+$ node buscar.js 20000 ingenua,sinReserva
+Búsqueda de contraejemplos: 20000 ejecuciones por variante, 3 hilos, P = 3, C = 6, 3 operaciones por hilo (30 % store)
+
+variante                         con fallo   tipo de fallo (veces)            contraejemplo más corto
+Paper                                    0   ninguno                          —
+Ingenua                               4796   uso tras liberar (4796)          6 pasos
+Umbral 0                              5089   peso negativo (5016), uso tras liberar (73) 2 pasos
+Sin reserva previa                    1171   liberación prematura (1171)      6 pasos
+Sin salida temprana                   5467   desborde (5467)                  7 pasos
+
+Validación del algoritmo del paper con 4 hilos, P = 4, C = 8, 6 operaciones por hilo: 20000 ejecuciones, 1909884 pasos atómicos, 0 fallos
+intentos de CAS por recarga: 1 → 80.11 %   2 → 18.17 %   3 → 1.66 %   4 → 0.06 %   (cota teórica P = 4)
+
+Contraejemplo más corto — Versión ingenua: leer y después apuntarse
+paso  hilo    acción                                                       cartel      hojas
+   0  —       estado inicial                                               (L1, 1)     L1=1
+   1  Carla   crea L2 (hoja 1: su propio pase)                             (L1, 1)     L1=1 L2=1
+   2  Carla   apunta +1 en la hoja de L2                                   (L1, 1)     L1=1 L2=2
+   3  Ana     lee el cartel: L1 (aún sin apuntarse)                        (L1, 1)     L1=1 L2=2
+   4  Carla   swap: cartel L1→L2, se lleva 1 sobrante                      (L2, 1)     L1=1 L2=2
+   5  Carla   resta 1 a la hoja de L1 → L1 liberado                        (L2, 1)     L1=† L2=2
+   6  Ana     apunta +1 en la hoja de L1 ✗                                 (L2, 1)     L1=† L2=2
+→ USO TRAS LIBERAR: Ana toca L1, que ya estaba liberado.
+
+Contraejemplo más corto — Recargar el cartel antes de apuntar la reserva
+paso  hilo    acción                                                       cartel      hojas
+   0  —       estado inicial                                               (L1, 3)     L1=3
+   1  Beto    crea L2 (hoja 1: su propio pase)                             (L1, 3)     L1=3 L2=1
+   2  Beto    apunta +6 en la hoja de L2                                   (L1, 3)     L1=3 L2=7
+   3  Carla   load: arranca 1 ticket (3→2), ofensa; le toca recargar       (L1, 2)     L1=3 L2=7
+   4  Carla   CAS 2→6: éxito                                               (L1, 6)     L1=3 L2=7
+   5  Beto    swap: cartel L1→L2, se lleva 6 sobrantes                     (L2, 6)     L1=3 L2=7
+   6  Beto    resta 6 a la hoja de L1 → L1 liberado                        (L2, 6)     L1=† L2=7
+→ LIBERACIÓN PREMATURA: L1 se liberó con 1 referencia todavía en uso.

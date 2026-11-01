@@ -1,0 +1,21 @@
+# intermedios de LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.synctex.gz
+# binarios
+codigo/bin/
+*.exe
+*.o
+__pycache__/
+# figuras recortadas del paper: se generan con figuras/extraer_figuras.py
+figuras/paper_*
+# notas locales
+ENCARGO.md
+REGISTRO.md

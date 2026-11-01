@@ -1,0 +1,20 @@
+latencia: 12 hilos por hardware, 0.344 ns por tick, coste del reloj: mediana 47.2 ns, minimo 43.0 ns (descontados), 100000 muestras
+  p = 1: cada muestra es la media de 16 operaciones seguidas; p > 1: cada muestra es una operacion
+  Autores   load          p=1   p1=     3.8  p25=     3.9  mediana=     3.9  p75=    11.1  p99=     32.2 ns
+  Autores   store         p=1   p1=    11.4  p25=    11.7  mediana=    11.9  p75=    13.0  p99=     18.1 ns
+  Autores   store&reclaim p=1   p1=    29.6  p25=    29.8  mediana=    30.3  p75=    30.5  p99=     43.2 ns
+  Libstdc++ load          p=1   p1=    11.6  p25=    11.6  mediana=    11.6  p75=    11.6  p99=     11.8 ns
+  Libstdc++ store         p=1   p1=    11.9  p25=    12.0  mediana=    12.0  p75=    12.1  p99=     12.1 ns
+  Libstdc++ store&reclaim p=1   p1=    26.3  p25=    26.4  mediana=    26.6  p75=    27.1  p99=     39.7 ns
+  Mutex     load          p=1   p1=     4.1  p25=     4.2  mediana=     4.2  p75=     4.2  p99=      4.3 ns
+  Mutex     store         p=1   p1=     4.3  p25=     4.3  mediana=     4.3  p75=     4.3  p99=      4.5 ns
+  Mutex     store&reclaim p=1   p1=    19.5  p25=    19.6  mediana=    19.8  p75=    20.1  p99=     24.3 ns
+  Autores   load          p=12  p1=    45.8  p25=   182.9  mediana=   268.9  p75=   384.0  p99=    825.8 ns
+  Autores   store         p=12  p1=    32.0  p25=   135.7  mediana=   209.0  p75=   309.2  p99=    686.6 ns
+  Autores   store&reclaim p=12  p1=    70.2  p25=   162.5  mediana=   222.1  p75=   304.1  p99=    616.7 ns
+  Libstdc++ load          p=12  p1=     0.0  p25=  1710.4  mediana=  3060.3  p75=  5161.8  p99=  15968.7 ns
+  Libstdc++ store         p=12  p1=   222.1  p25=  1733.5  mediana=  3052.7  p75=  5091.6  p99=  15767.2 ns
+  Libstdc++ store&reclaim p=12  p1=   177.7  p25=  1708.3  mediana=  3338.8  p75=  6055.1  p99=  20426.0 ns
+  Mutex     load          p=12  p1=     0.0  p25=     0.0  mediana=    61.0  p75=   848.5  p99=  27625.0 ns
+  Mutex     store         p=12  p1=     0.0  p25=    12.7  mediana=   152.2  p75=  1145.3  p99=  30711.8 ns
+  Mutex     store&reclaim p=12  p1=     5.9  p25=    54.1  mediana=   187.0  p75=  1176.3  p99=  30252.8 ns

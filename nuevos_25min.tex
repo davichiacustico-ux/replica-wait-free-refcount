@@ -1,0 +1,39 @@
+%%NEW plan
+\begin{frame}{Plan de la exposición}
+  \renewcommand{\arraystretch}{1.25}\small
+  \begin{tabularx}{\linewidth}{@{}l l X@{}}
+    \toprule
+    & \textbf{Expone} & \textbf{Contenido}\\
+    \midrule
+    1 & \textbf{David} & El problema: conteo de referencias, la carrera \emph{read-reclaim}, garantías de progreso, lo que había y qué aporta el paper. \emph{Demo: la carrera con AddressSanitizer.}\\
+    2 & \textbf{Hugo} & La solución: conteo ponderado, algoritmo 1 (\texttt{store}/\texttt{load}), empaquetado en 64 bits, la recarga \emph{wait-free} (algoritmo 2) y un ejemplo con números. \emph{Demo: el simulador encuentra los fallos.}\\
+    3 & \textbf{Diego} & Corrección y evaluación: demostración, coste, extensiones, experimentos del paper, \emph{nuestras pruebas en local}, crítica y conclusiones.\\
+    \bottomrule
+  \end{tabularx}
+  \vfill
+  {\footnotesize\color{gris}Pruebas en local: Intel i5-10400 (12 hilos), WSL Ubuntu 24.04, g++ 13.3, código original de los autores.}
+\end{frame}
+
+%%NEW alg1
+\begin{frame}{Algoritmo 1: \texttt{store} y \texttt{load}}
+  \centering\includegraphics[width=0.9\linewidth,height=0.46\textheight,keepaspectratio]{figuras/paper_alg1.pdf}
+  \fuente{Algoritmo 1 del paper.}
+  \begin{columns}[T]
+    \column{0.48\textwidth}\footnotesize
+    \textbf{\texttt{store}}: \textbf{1.} sumar $C$ al objeto nuevo \emph{antes} de publicarlo; \textbf{2.} \texttt{swap}: poner (nuevo, $C$) y llevarse (viejo, $w$) de golpe; \textbf{3.} restar al viejo \textbf{solo} el sobrante $w$.
+    \column{0.48\textwidth}\footnotesize
+    \textbf{\texttt{load}}: \textbf{1.} \texttt{fetch\_and\_add}($-$\texttt{pack(null,1)}): un ticket menos y el valor anterior: \clave{una instrucción}; \textbf{2.} si quedan menos de $P$: recargar (alg.\,2); \textbf{3.} devolver un pase de peso 1.
+  \end{columns}
+\end{frame}
+
+%%NEW alg2
+\begin{frame}{Algoritmo 2: \texttt{increase\_weight}}
+  \centering\includegraphics[width=0.9\linewidth,height=0.46\textheight,keepaspectratio]{figuras/paper_alg2.pdf}
+  \fuente{Algoritmo 2 del paper.}
+  \begin{columns}[T]
+    \column{0.55\textwidth}\footnotesize
+    \textbf{1.} reservar $C-w$ en la hoja \textbf{antes} del CAS; \textbf{2.} CAS: si el cartel sigue en (ptr, actual), sumar $C-w$ y terminar; \textbf{3.} otro puntero o \textbf{peso mayor}: devolver la reserva y salir; \textbf{4.} peso menor: reintentar.
+    \column{0.41\textwidth}\footnotesize
+    Los pesos esperados forman una cadena \textbf{estrictamente decreciente} entre $P-1$ y 0: \clave{como mucho $P$ intentos}.
+  \end{columns}
+\end{frame}

@@ -1,0 +1,18 @@
+$ ./bin/estres_asan ingenua 2>&1 | grep -E 'version=|ERROR|WRITE|READ|#[0-3] |freed by|previously allocated|SUMMARY' | head -16
+==493==ERROR: AddressSanitizer: heap-use-after-free on address 0x502000001410 at pc 0x5d5f665f7980 bp 0x73a1467fd7f0 sp 0x73a1467fd7e0
+WRITE of size 8 at 0x502000001410 thread T1
+    #0 0x5d5f665f797f in std::__atomic_base<long>::fetch_add(long, std::memory_order) /usr/include/c++/13/bits/atomic_base.h:635
+    #1 0x5d5f665f797f in Ingenua::load() /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:29
+    #2 0x5d5f665f797f in operator() /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:44
+    #3 0x5d5f665f7a56 in __invoke_impl<void, ejecutar_ingenua()::<lambda()> > /usr/include/c++/13/bits/invoke.h:61
+freed by thread T2 here:
+    #0 0x73a14a0ff5e8 in operator delete(void*, unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:164
+    #1 0x5d5f665f78c4 in Ingenua::soltar(Libro*) /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:24
+    #2 0x5d5f665f78c4 in Ingenua::store(Libro*) /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:25
+    #3 0x5d5f665f78c4 in operator() /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:43
+previously allocated by thread T2 here:
+    #0 0x73a14a0fe548 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5d5f665f781f in operator() /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:43
+    #2 0x5d5f665f7a56 in __invoke_impl<void, ejecutar_ingenua()::<lambda()> > /usr/include/c++/13/bits/invoke.h:61
+    #3 0x5d5f665f7a56 in __invoke<ejecutar_ingenua()::<lambda()> > /usr/include/c++/13/bits/invoke.h:96
+

@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "compilar",
+      "type": "process",
+      "command": "g++",
+      "args": ["-std=c++20", "-O2", "-Wall", "-pthread", "${file}", "-o", "${fileDirname}\\${fileBasenameNoExtension}.exe"],
+      "problemMatcher": ["$gcc"],
+      "presentation": { "reveal": "silent", "panel": "shared", "clear": true }
+    },
+    {
+      "label": "Compilar y ejecutar",
+      "type": "process",
+      "command": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+      "options": { "cwd": "${fileDirname}" },
+      "dependsOn": "compilar",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "shared", "clear": false, "focus": true }
+    }
+  ]
+}

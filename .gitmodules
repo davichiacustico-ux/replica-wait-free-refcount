@@ -1,0 +1,3 @@
+[submodule "codigo/autores"]
+	path = codigo/autores
+	url = https://github.com/ivogabe/wait-free-atomic-shared-pointer
