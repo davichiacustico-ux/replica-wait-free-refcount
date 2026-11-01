@@ -19,3 +19,5 @@ figuras/paper_*
 # notas locales
 ENCARGO.md
 REGISTRO.md
+# diapositivas compiladas: incluyen figuras del paper; se generan en local (ver README)
+exposicion*.pdf
