@@ -2,20 +2,22 @@
 //   ingenua : load lee el puntero y DESPUÉS suma 1 al contador (dos pasos): carrera read-reclaim.
 //   autores : ivogabe::atomic_shared_ptr, el código original del paper (load = un fetch_sub).
 // Compilar (Linux/WSL): g++ -std=c++20 -O1 -g -fsanitize=address -pthread estres_asan.cpp -o estres_asan
-// Ejecutar:             ./estres_asan ingenua      ./estres_asan autores
+// Ejecutar:             ./estres_asan ingenua      ./estres_asan autores [hilos] [operaciones_por_hilo]
+// ThreadSanitizer:      g++ -std=c++20 -O1 -g -fsanitize=thread -pthread estres_asan.cpp -o estres_tsan
 #include <cstdint>
 #include <utility>
 #include "autores/cpp/atomic_shared_ptr.h"   // submódulo: github.com/ivogabe/wait-free-atomic-shared-pointer
 #include <atomic>
 #include <chrono>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <random>
 #include <thread>
 #include <vector>
 
-constexpr int HILOS = 8;
-constexpr int OPERACIONES = 200000;   // por hilo; 10 % store, 90 % load + usar + soltar
+static int HILOS = 8;
+static int OPERACIONES = 200000;   // por hilo; 10 % store, 90 % load + usar + soltar
 
 /* ---------- versión ingenua: contador dentro del objeto, leer y luego apuntarse ---------- */
 struct Libro { std::atomic<long> rc{1}; long dato = 42; };
@@ -68,6 +70,8 @@ long ejecutar_autores() {
 
 int main(int argc, char** argv) {
     const char* v = argc > 1 ? argv[1] : "autores";
+    if (argc > 2) HILOS = std::atoi(argv[2]);
+    if (argc > 3) OPERACIONES = std::atoi(argv[3]);
     std::printf("version=%s  hilos=%d  operaciones=%d (10 %% store, 90 %% load)\n", v, HILOS, HILOS * OPERACIONES);
     auto t0 = std::chrono::steady_clock::now();
     long s = std::strcmp(v, "ingenua") == 0 ? ejecutar_ingenua() : ejecutar_autores();

@@ -1,0 +1,15 @@
+$ ./bin/estres_tsan autores 8 50000
+version=autores  hilos=8  operaciones=400000 (10 % store, 90 % load)
+terminado en 110 ms sin errores de memoria (suma de comprobacion 15116934)
+$ ./bin/estres_tsan autores 16 50000
+version=autores  hilos=16  operaciones=800000 (10 % store, 90 % load)
+terminado en 244 ms sin errores de memoria (suma de comprobacion 30228030)
+$ ./bin/estres_tsan ingenua 8 50000  (líneas resumidas)
+      5 SUMMARY: ThreadSanitizer: data race ../../../../src/libsanitizer/tsan/tsan_new_delete.cpp:150 in operator delete(void*, unsigned long)
+      2 SUMMARY: ThreadSanitizer: data race /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:46 in operator()
+      1 SUMMARY: ThreadSanitizer: data race /usr/include/c++/13/bits/atomic_base.h:362 in std::__atomic_base<long>::__atomic_base(long)
+      3 SUMMARY: ThreadSanitizer: data race /usr/include/c++/13/bits/atomic_base.h:635 in std::__atomic_base<long>::fetch_add(long, std::memory_order)
+      4 SUMMARY: ThreadSanitizer: data race /usr/include/c++/13/bits/atomic_base.h:645 in std::__atomic_base<long>::fetch_sub(long, std::memory_order)
+      1 SUMMARY: ThreadSanitizer: heap-use-after-free ../../../../src/libsanitizer/tsan/tsan_new_delete.cpp:150 in operator delete(void*, unsigned long)
+      1 SUMMARY: ThreadSanitizer: heap-use-after-free /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:23 in Libro::Libro()
+      3 SUMMARY: ThreadSanitizer: heap-use-after-free /mnt/c/Users/David/Documents/Semestres/2026B/cpd2/exposicion_paper/codigo/estres_asan.cpp:46 in operator()

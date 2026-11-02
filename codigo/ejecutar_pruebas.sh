@@ -14,7 +14,9 @@ cap 01_autores_demo.txt "g++ -std=c++20 -O2 autores/cpp/main.cpp -o bin/demo" ".
 # 2. La carrera con AddressSanitizer: versión ingenua frente al código de los autores
 g++ -std=c++20 -O1 -g -fsanitize=address -fno-omit-frame-pointer -pthread estres_asan.cpp -o bin/estres_asan
 cap 02_asan_ingenua.txt "./bin/estres_asan ingenua 2>&1 | grep -E 'version=|ERROR|WRITE|READ|#[0-3] |freed by|previously allocated|SUMMARY' | head -16"
-cap 03_asan_autores.txt "./bin/estres_asan autores"
+cap 03_asan_autores.txt "./bin/estres_asan autores" "./bin/estres_asan autores 12 200000" "./bin/estres_asan autores 16 200000"
+g++ -std=c++20 -O1 -g -fsanitize=thread -pthread estres_asan.cpp -o bin/estres_tsan
+cap 09_tsan.txt "./bin/estres_tsan autores 8 50000" "./bin/estres_tsan autores 16 50000" "./bin/estres_tsan ingenua 8 50000 2>&1 | grep -E 'version=|WARNING|SUMMARY|terminado' | head -6"
 
 # 3. El boceto didáctico (explicación, Parte 11) y dos variantes rotas
 g++ -std=c++17 -O2 -pthread boceto/prueba.cpp -o bin/boceto
