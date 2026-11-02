@@ -12,8 +12,8 @@ RAIZ = Path(__file__).resolve().parent.parent
 CAP = RAIZ / "capturas"
 OUT = RAIZ / "graficos"
 META = {"Creator": None, "Producer": None, "Author": None}
-COL = {"Autores": "#d62728", "Libstdc++": "#1f77b4", "Mutex": "#555555"}
-MARK = {"Autores": "o", "Libstdc++": "s", "Mutex": "^"}
+COL = {"Autores": "#d62728", "Libstdc++": "#1f77b4", "Williams": "#2ca02c", "Mutex": "#555555"}
+MARK = {"Autores": "o", "Libstdc++": "s", "Williams": "x", "Mutex": "^"}
 plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True, "grid.alpha": 0.3, "grid.linestyle": ":"})
 
 

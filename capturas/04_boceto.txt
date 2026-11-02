@@ -2,11 +2,11 @@ $ ./bin/boceto
 paper    hilos=8  operaciones=4000000
          errores detectados      = 0
          objetos sin liberar     = 0
-         max. intentos CAS/recarga = 7 (cota P = 8)
+         max. intentos CAS/recarga = 8 (cota P = 8)
 
 ingenuo  hilos=8  operaciones=800000
-         errores detectados      = 601681
-         objetos sin liberar     = -102892
+         errores detectados      = 632125
+         objetos sin liberar     = -102130
          max. intentos CAS/recarga = 0 (cota P = 8)
 
 

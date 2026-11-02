@@ -26,7 +26,7 @@ cap 04_boceto.txt "./bin/boceto"
 cap 05_boceto_variantes.txt "./bin/boceto_sin_salida" "./bin/boceto_c_igual_p"
 
 # 4. Mini-reproducción de los experimentos (sección 6)
-g++ -std=c++20 -O2 -pthread bench.cpp -o bin/bench
+g++ -std=c++20 -O2 -pthread -mcx16 -Wno-deprecated-declarations bench.cpp -o bin/bench -latomic   # Williams usa CAS de 128 bits
 ./bin/bench rendimiento 1.0 > "$CAP/rendimiento.csv" 2> "$CAP/06_rendimiento.txt"
 ./bin/bench latencia 100000 > "$CAP/latencia.csv" 2> "$CAP/07_latencia.txt"
 echo "listo"

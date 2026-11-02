@@ -1,20 +1,26 @@
-latencia: 12 hilos por hardware, 0.344 ns por tick, coste del reloj: mediana 47.2 ns, minimo 43.0 ns (descontados), 100000 muestras
+latencia: 12 hilos por hardware, 0.344 ns por tick, coste del reloj: mediana 9.3 ns, minimo 8.6 ns (descontados), 100000 muestras
   p = 1: cada muestra es la media de 16 operaciones seguidas; p > 1: cada muestra es una operacion
-  Autores   load          p=1   p1=     3.8  p25=     3.9  mediana=     3.9  p75=    11.1  p99=     32.2 ns
-  Autores   store         p=1   p1=    11.4  p25=    11.7  mediana=    11.9  p75=    13.0  p99=     18.1 ns
-  Autores   store&reclaim p=1   p1=    29.6  p25=    29.8  mediana=    30.3  p75=    30.5  p99=     43.2 ns
-  Libstdc++ load          p=1   p1=    11.6  p25=    11.6  mediana=    11.6  p75=    11.6  p99=     11.8 ns
-  Libstdc++ store         p=1   p1=    11.9  p25=    12.0  mediana=    12.0  p75=    12.1  p99=     12.1 ns
-  Libstdc++ store&reclaim p=1   p1=    26.3  p25=    26.4  mediana=    26.6  p75=    27.1  p99=     39.7 ns
-  Mutex     load          p=1   p1=     4.1  p25=     4.2  mediana=     4.2  p75=     4.2  p99=      4.3 ns
-  Mutex     store         p=1   p1=     4.3  p25=     4.3  mediana=     4.3  p75=     4.3  p99=      4.5 ns
-  Mutex     store&reclaim p=1   p1=    19.5  p25=    19.6  mediana=    19.8  p75=    20.1  p99=     24.3 ns
-  Autores   load          p=12  p1=    45.8  p25=   182.9  mediana=   268.9  p75=   384.0  p99=    825.8 ns
-  Autores   store         p=12  p1=    32.0  p25=   135.7  mediana=   209.0  p75=   309.2  p99=    686.6 ns
-  Autores   store&reclaim p=12  p1=    70.2  p25=   162.5  mediana=   222.1  p75=   304.1  p99=    616.7 ns
-  Libstdc++ load          p=12  p1=     0.0  p25=  1710.4  mediana=  3060.3  p75=  5161.8  p99=  15968.7 ns
-  Libstdc++ store         p=12  p1=   222.1  p25=  1733.5  mediana=  3052.7  p75=  5091.6  p99=  15767.2 ns
-  Libstdc++ store&reclaim p=12  p1=   177.7  p25=  1708.3  mediana=  3338.8  p75=  6055.1  p99=  20426.0 ns
-  Mutex     load          p=12  p1=     0.0  p25=     0.0  mediana=    61.0  p75=   848.5  p99=  27625.0 ns
-  Mutex     store         p=12  p1=     0.0  p25=    12.7  mediana=   152.2  p75=  1145.3  p99=  30711.8 ns
-  Mutex     store&reclaim p=12  p1=     5.9  p25=    54.1  mediana=   187.0  p75=  1176.3  p99=  30252.8 ns
+  Autores   load          p=1   p1=     6.2  p25=     6.2  mediana=     6.3  p75=     6.3  p99=      6.4 ns
+  Autores   store         p=1   p1=    14.1  p25=    14.5  mediana=    14.5  p75=    14.5  p99=     14.9 ns
+  Autores   store&reclaim p=1   p1=    33.0  p25=    33.8  mediana=    34.0  p75=    34.5  p99=     35.4 ns
+  Libstdc++ load          p=1   p1=    13.6  p25=    13.6  mediana=    13.6  p75=    13.7  p99=     14.2 ns
+  Libstdc++ store         p=1   p1=    14.0  p25=    14.0  mediana=    14.1  p75=    14.1  p99=     14.5 ns
+  Libstdc++ store&reclaim p=1   p1=    28.2  p25=    28.9  mediana=    28.9  p75=    29.0  p99=     29.7 ns
+  Williams  load          p=1   p1=    31.5  p25=    31.6  mediana=    31.7  p75=    32.4  p99=     33.0 ns
+  Williams  store         p=1   p1=    39.9  p25=    40.2  mediana=    40.4  p75=    41.2  p99=     42.0 ns
+  Williams  store&reclaim p=1   p1=    64.2  p25=    64.5  mediana=    64.8  p75=    66.1  p99=     75.1 ns
+  Mutex     load          p=1   p1=     6.3  p25=     6.3  mediana=     6.4  p75=     6.4  p99=      6.6 ns
+  Mutex     store         p=1   p1=     6.5  p25=     6.5  mediana=     6.5  p75=     6.5  p99=      6.8 ns
+  Mutex     store&reclaim p=1   p1=    21.5  p25=    21.7  mediana=    21.7  p75=    21.8  p99=     27.5 ns
+  Autores   load          p=12  p1=    85.7  p25=   214.2  mediana=   307.9  p75=   435.6  p99=    929.4 ns
+  Autores   store         p=12  p1=    58.2  p25=   164.9  mediana=   256.9  p75=   384.3  p99=    864.3 ns
+  Autores   store&reclaim p=12  p1=   119.1  p25=   222.8  mediana=   287.2  p75=   376.0  p99=    698.3 ns
+  Libstdc++ load          p=12  p1=    79.5  p25=  1778.9  mediana=  3189.4  p75=  5488.6  p99=  19891.5 ns
+  Libstdc++ store         p=12  p1=   188.7  p25=  1638.4  mediana=  3130.9  p75=  5606.7  p99=  21181.8 ns
+  Libstdc++ store&reclaim p=12  p1=   155.3  p25=  1345.4  mediana=  2875.3  p75=  5803.7  p99=  25289.9 ns
+  Williams  load          p=12  p1=    66.1  p25=  1119.5  mediana=  1638.4  p75=  2349.9  p99=   6059.9 ns
+  Williams  store         p=12  p1=   124.7  p25=   406.7  mediana=   695.6  p75=  1133.3  p99=   3236.6 ns
+  Williams  store&reclaim p=12  p1=   159.4  p25=   504.5  mediana=   838.5  p75=  1333.3  p99=   3918.0 ns
+  Mutex     load          p=12  p1=    24.8  p25=    33.7  mediana=   118.5  p75=  1059.6  p99=  25828.8 ns
+  Mutex     store         p=12  p1=    28.2  p25=    52.3  mediana=   170.5  p75=  1282.4  p99=  25731.1 ns
+  Mutex     store&reclaim p=12  p1=    41.3  p25=    89.9  mediana=   194.2  p75=  1405.3  p99=  24308.9 ns

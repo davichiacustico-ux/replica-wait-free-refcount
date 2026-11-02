@@ -4,12 +4,14 @@
 //   latencia:    p hilos; el primero mide load, store (sin liberar) y store & reclaim; los demás hacen store sin parar.
 // Implementaciones: Autores  = ivogabe::atomic_shared_ptr (código original del paper, wait-free)
 //                   Libstdc++ = std::atomic<std::shared_ptr<T>> de GCC (con candado interno)
+//                   Williams  = jss::atomic_shared_ptr (split reference count, lock-free; rival del paper)
 //                   Mutex     = std::shared_ptr protegido con std::mutex (referencia sencilla)
 // Compilar (Linux/WSL): g++ -std=c++20 -O2 -pthread bench.cpp -o bench
 // Uso: ./bench rendimiento [segundos] > rendimiento.csv     ./bench latencia [muestras] > latencia.csv
 #include <cstdint>
 #include <utility>
 #include "autores/cpp/atomic_shared_ptr.h"   // submódulo: github.com/ivogabe/wait-free-atomic-shared-pointer
+#include "williams/atomic_shared_ptr"        // submódulo: github.com/anthonywilliams/atomic_shared_ptr (BSD)
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -23,7 +25,7 @@
 #include <vector>
 #include <x86intrin.h>
 
-/* ---------- las tres implementaciones con la misma interfaz ---------- */
+/* ---------- las cuatro implementaciones con la misma interfaz ---------- */
 struct Autores {
     static constexpr const char* nombre = "Autores";
     template <class T> using SP = ivogabe::shared_ptr<T>;
@@ -37,6 +39,15 @@ struct Libstdcpp {
     static constexpr const char* nombre = "Libstdc++";
     template <class T> using SP = std::shared_ptr<T>;
     template <class T> using ASP = std::atomic<std::shared_ptr<T>>;
+    template <class T, class... A> static SP<T> crear(A&&... a) { return SP<T>(new T{std::forward<A>(a)...}); }
+    template <class T> static SP<T> load(ASP<T>& c) { return c.load(); }
+    template <class T> static void store(ASP<T>& c, SP<T> p) { c.store(std::move(p)); }
+    template <class T> static bool cas(ASP<T>& c, const SP<T>& esperado, const SP<T>& nuevo) { SP<T> e = esperado; return c.compare_exchange_strong(e, nuevo); }
+};
+struct Williams {
+    static constexpr const char* nombre = "Williams";
+    template <class T> using SP = jss::shared_ptr<T>;
+    template <class T> using ASP = jss::atomic_shared_ptr<T>;
     template <class T, class... A> static SP<T> crear(A&&... a) { return SP<T>(new T{std::forward<A>(a)...}); }
     template <class T> static SP<T> load(ASP<T>& c) { return c.load(); }
     template <class T> static void store(ASP<T>& c, SP<T> p) { c.store(std::move(p)); }
@@ -169,7 +180,7 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "rendimiento: %u hilos por hardware, %.1f s por punto\n", hw, seg);
         std::puts("impl,n,u,hilos,mops");
         struct { long n; int u; } paneles[] = {{1, 1}, {1, 10}, {1, 50}, {10, 1}, {10, 10}, {100000, 50}};
-        for (auto& pa : paneles) { fila_rendimiento<Autores>(pa.n, pa.u, hilos, seg); fila_rendimiento<Libstdcpp>(pa.n, pa.u, hilos, seg); fila_rendimiento<Mutex>(pa.n, pa.u, hilos, seg); }
+        for (auto& pa : paneles) { fila_rendimiento<Autores>(pa.n, pa.u, hilos, seg); fila_rendimiento<Libstdcpp>(pa.n, pa.u, hilos, seg); fila_rendimiento<Williams>(pa.n, pa.u, hilos, seg); fila_rendimiento<Mutex>(pa.n, pa.u, hilos, seg); }
     } else {
         int muestras = argc > 2 ? std::atoi(argv[2]) : 200000;
         double nspt = ns_por_tick();
@@ -178,6 +189,6 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "latencia: %u hilos por hardware, %.3f ns por tick, coste del reloj: mediana %.1f ns, minimo %.1f ns (descontados), %d muestras\n", hw, nspt, sc, scmin, muestras);
         std::fprintf(stderr, "  p = 1: cada muestra es la media de 16 operaciones seguidas; p > 1: cada muestra es una operacion\n");
         std::puts("impl,op,p,p1,p25,p50,p75,p99");
-        for (int p : {1, (int)hw}) { fila_latencia<Autores>(p, muestras, nspt, sc, scmin); fila_latencia<Libstdcpp>(p, muestras, nspt, sc, scmin); fila_latencia<Mutex>(p, muestras, nspt, sc, scmin); }
+        for (int p : {1, (int)hw}) { fila_latencia<Autores>(p, muestras, nspt, sc, scmin); fila_latencia<Libstdcpp>(p, muestras, nspt, sc, scmin); fila_latencia<Williams>(p, muestras, nspt, sc, scmin); fila_latencia<Mutex>(p, muestras, nspt, sc, scmin); }
     }
 }

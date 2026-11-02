@@ -53,7 +53,7 @@ Cada uno comprueba una afirmación del paper. Lo imprescindible lo llevan David 
 - **Una rama por persona** (`david`, `jheremy`, `diego`) y *pull request* a `main`; Jheremy revisa e integra.
 - **No cambiar parámetros de `bench.cpp` sin avisar**: lo usan David (latencia) y Jheremy (rendimiento).
 - **Repeticiones**: 3 por punto; se informa la mediana y el rango.
-- **Recortes acordados**: hilos hasta ×1,5 los núcleos; sin rivales nuevos (Folly, Anderson) — van como trabajo futuro; la memoria solo con el pico de RSS.
+- **Recortes acordados**: hilos hasta ×1,5 los núcleos; se añade Williams (split reference count, submódulo `codigo/williams`, BSD); Folly y Anderson quedan como trabajo futuro; la memoria solo con el pico de RSS.
 
 ### Tareas de cada uno, en detalle
 
