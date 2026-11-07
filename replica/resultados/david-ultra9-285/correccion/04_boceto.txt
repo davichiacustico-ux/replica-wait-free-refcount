@@ -1,0 +1,12 @@
+$ ./bin/boceto
+paper    hilos=8  operaciones=4000000
+         errores detectados      = 0
+         objetos sin liberar     = 0
+         max. intentos CAS/recarga = 6 (cota P = 8)
+
+ingenuo  hilos=8  operaciones=800000
+         errores detectados      = 227031
+         objetos sin liberar     = -51834
+         max. intentos CAS/recarga = 0 (cota P = 8)
+
+
