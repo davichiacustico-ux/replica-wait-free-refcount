@@ -1,0 +1,12 @@
+$ ./bin/estres_asan autores
+version=autores  hilos=8  operaciones=1600000 (10 % store, 90 % load)
+terminado en 67 ms sin errores de memoria (suma de comprobacion 60464082)
+
+$ ./bin/estres_asan autores 12 200000
+version=autores  hilos=12  operaciones=2400000 (10 % store, 90 % load)
+terminado en 96 ms sin errores de memoria (suma de comprobacion 90706434)
+
+$ ./bin/estres_asan autores 16 200000
+version=autores  hilos=16  operaciones=3200000 (10 % store, 90 % load)
+terminado en 139 ms sin errores de memoria (suma de comprobacion 120937614)
+
