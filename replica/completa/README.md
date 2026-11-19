@@ -5,6 +5,7 @@ Esta carpeta contiene todo lo necesario para repetir los experimentos del paper 
 - **Para entender qué se hizo y qué salió**, lee [EXPLICACION.md](EXPLICACION.md). Explica desde cero el problema, cada algoritmo, el método y los resultados.
 - **Para saber qué hace cada archivo y en qué orden usarlo**, sigue leyendo este README.
 - **Los resultados** están en [../resultados/david-ultra9-285/](../resultados/david-ultra9-285/LEEME.md).
+- **Para preparar la exposición y las preguntas del jurado**, mira [DEFENSA.md](DEFENSA.md): un tribunal simulado con 14 críticas, qué responder a cada una y qué mejorar.
 - **Para revisar cómo se cerró la última fase** (comprobaciones y trampas conocidas), mira [TRASPASO.md](TRASPASO.md). Ya no queda nada por medir.
 
 ## Qué ejecutar según lo que quieras
