@@ -1,0 +1,18 @@
+$ ./bin/estres_asan ingenua 2>&1 | grep -E 'version=|ERROR|WRITE|READ|#[0-3] |freed by|previously allocated|SUMMARY' | head -16
+==66988==ERROR: AddressSanitizer: attempting double-free on 0x502000001470 in thread T4:
+    #0 0x7758148ff5e8 in operator delete(void*, unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:164
+    #1 0x5588adb768f6 in Ingenua::soltar(Libro*) /home/alumno16/Documentos/Davichi/proyecto/replica-wait-free-refcount/codigo/estres_asan.cpp:26
+    #2 0x5588adb768f6 in Ingenua::store(Libro*) /home/alumno16/Documentos/Davichi/proyecto/replica-wait-free-refcount/codigo/estres_asan.cpp:27
+    #3 0x5588adb768f6 in operator() /home/alumno16/Documentos/Davichi/proyecto/replica-wait-free-refcount/codigo/estres_asan.cpp:45
+freed by thread T2 here:
+    #0 0x7758148ff5e8 in operator delete(void*, unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:164
+    #1 0x5588adb76990 in Ingenua::soltar(Libro*) /home/alumno16/Documentos/Davichi/proyecto/replica-wait-free-refcount/codigo/estres_asan.cpp:26
+    #2 0x5588adb76990 in operator() /home/alumno16/Documentos/Davichi/proyecto/replica-wait-free-refcount/codigo/estres_asan.cpp:46
+    #3 0x5588adb76a9e in __invoke_impl<void, ejecutar_ingenua()::<lambda()> > /usr/include/c++/13/bits/invoke.h:61
+previously allocated by thread T2 here:
+    #0 0x7758148fe548 in operator new(unsigned long) ../../../../src/libsanitizer/asan/asan_new_delete.cpp:95
+    #1 0x5588adb76855 in operator() /home/alumno16/Documentos/Davichi/proyecto/replica-wait-free-refcount/codigo/estres_asan.cpp:45
+    #2 0x5588adb76a9e in __invoke_impl<void, ejecutar_ingenua()::<lambda()> > /usr/include/c++/13/bits/invoke.h:61
+    #3 0x5588adb76a9e in __invoke<ejecutar_ingenua()::<lambda()> > /usr/include/c++/13/bits/invoke.h:96
+    #0 0x7758148f51f9 in pthread_create ../../../../src/libsanitizer/asan/asan_interceptors.cpp:245
+

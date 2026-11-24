@@ -1,0 +1,14 @@
+$ uname -sr
+Linux 6.17.0-1033-oem
+
+$ g++ --version | head -1
+g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+
+$ nproc
+24
+
+$ lscpu | grep -E 'Model name|^CPU\(s\)'
+CPU(s):                                   24
+CPU(s) factor de escala MHz:              50%
+CPU(s) del nodo NUMA 0:                   0-23
+

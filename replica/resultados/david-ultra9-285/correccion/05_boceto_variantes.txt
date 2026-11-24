@@ -1,0 +1,14 @@
+$ ./bin/boceto_sin_salida
+paper    hilos=8  operaciones=4000000
+         errores detectados      = 0
+         objetos sin liberar     = 0
+         max. intentos CAS/recarga = 45 (cota P = 8)
+
+
+$ ./bin/boceto_c_igual_p
+paper    hilos=8  operaciones=4000000
+         errores detectados      = 42348
+         objetos sin liberar     = 4280
+         max. intentos CAS/recarga = 7 (cota P = 8)
+
+

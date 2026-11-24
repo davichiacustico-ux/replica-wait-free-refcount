@@ -1,0 +1,48 @@
+# bench.cpp del equipo, con ASan + UBSan
+In file included from bench_equipo.cpp:8:
+../../../codigo/bench.cpp: In function ‘int main_de_bench(int, char**)’:
+../../../codigo/bench.cpp:194:1: warning: no return statement in function returning non-void [-Wreturn-type]
+  194 | }
+      | ^
+Autores n=1 u=50 hilos=8: código 0, 0 avisos, 1.759 Mop/s
+Autores n=1 u=50 hilos=16: código 0, 0 avisos, 1.377 Mop/s
+Autores n=10 u=10 hilos=16: código 0, 0 avisos, 19.787 Mop/s
+Libstdc++ n=1 u=50 hilos=8: código 0, 0 avisos, 0.302 Mop/s
+Libstdc++ n=1 u=50 hilos=16: código 0, 0 avisos, 0.144 Mop/s
+Libstdc++ n=10 u=10 hilos=16: código 0, 0 avisos, 5.824 Mop/s
+Williams n=1 u=50 hilos=8: código 0, 0 avisos, 0.349 Mop/s
+Williams n=1 u=50 hilos=16: código 0, 0 avisos, 0.239 Mop/s
+Williams n=10 u=10 hilos=16: código 0, 0 avisos, 6.543 Mop/s
+Mutex n=1 u=50 hilos=8: código 0, 0 avisos, 1.042 Mop/s
+Mutex n=1 u=50 hilos=16: código 0, 0 avisos, 0.794 Mop/s
+Mutex n=10 u=10 hilos=16: código 0, 0 avisos, 11.165 Mop/s
+
+# bench.cpp del equipo, con TSan
+In file included from bench_equipo.cpp:8:
+../../../codigo/bench.cpp: In function ‘int main_de_bench(int, char**)’:
+../../../codigo/bench.cpp:194:1: warning: no return statement in function returning non-void [-Wreturn-type]
+  194 | }
+      | ^
+Autores n=1 u=50 hilos=8: código 0, 0 avisos, 0.358 Mop/s
+Libstdc++ n=1 u=50 hilos=8: código 0, 0 avisos, 0.130 Mop/s
+Williams n=1 u=50 hilos=8: código 0, 0 avisos, 0.104 Mop/s
+Mutex n=1 u=50 hilos=8: código 0, 0 avisos, 0.252 Mop/s
+
+# bench_stack oficial, con ASan + UBSan, dentro de Docker
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    FETCHCONTENT_SOURCE_DIR_GOOGLETEST
+
+
+[100%] Built target bench_stack
+ivo n=1 u=50 hilos=8: código 0, 0 avisos, 1.53039 Mop/s
+ivo n=1 u=50 hilos=16: código 0, 0 avisos, 1.11756 Mop/s
+gnu n=1 u=50 hilos=8: código 0, 0 avisos, 0.353618 Mop/s
+gnu n=1 u=50 hilos=16: código 0, 0 avisos, 0.152027 Mop/s
+jss-free n=1 u=50 hilos=8: código 0, 0 avisos, 0.384832 Mop/s
+jss-free n=1 u=50 hilos=16: código 0, 0 avisos, 0.214949 Mop/s
+folly n=1 u=50 hilos=8: código 0, 0 avisos, 0.299985 Mop/s
+folly n=1 u=50 hilos=16: código 0, 0 avisos, 0.185734 Mop/s
+mine n=1 u=50 hilos=8: código 0, 0 avisos, 1.85188 Mop/s
+mine n=1 u=50 hilos=16: código 0, 0 avisos, 1.42496 Mop/s

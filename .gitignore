@@ -21,3 +21,7 @@ ENCARGO.md
 REGISTRO.md
 # diapositivas compiladas: incluyen figuras del paper; se generan en local (ver README)
 exposicion*.pdf
+# réplica completa: el artefacto de Zenodo (código de terceros) y lo compilado se regeneran con replica/completa/preparar.sh
+replica/completa/artefacto/
+replica/completa/bin/
+replica/completa/artefacto_docker/
