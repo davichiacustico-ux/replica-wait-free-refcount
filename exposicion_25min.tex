@@ -45,6 +45,7 @@
   \vfill{\color{acento}\large\bfseries Parte #1}\par\medskip{\fontsize{30}{34}\selectfont\bfseries #2}\par\bigskip
   {\large Expone: \textbf{#3}}\par\medskip{\color{gris}#4}\vfill\end{frame}}}
 \setlength{\tabcolsep}{5pt}
+\newif\ifcorta % réplica completa: \cortatrue = versión corta
 
 \title{A Fast Wait-Free Solution to Read-Reclaim Races in Reference Counting}
 \subtitle{Conteo de referencias concurrente: sin candados, sin esperas y sin memoria extra}
@@ -514,34 +515,15 @@ config.store(std::make_shared<Config>(n));
 
 \begin{frame}{Pruebas en local (2): rendimiento con el código de los autores}
   \centering\includegraphics[width=0.74\linewidth]{graficos/local_rendimiento.pdf}
-  \fuente{Mini-Fig. 5 (12 hilos): Autores, \texttt{atomic<shared\_ptr>} de GCC 13 (Libstdc++) y \texttt{std::mutex}. $n=1,u=1$: 34,3 · 2,2 · 6,4 Mop/s. Con $n=1,u=50$ el mutex gana (2,9 frente a 2,2): el CAS es \emph{lock-free}. Con 1 hilo, Autores es la más rápida. Tendencias, no cifras absolutas.}
+  \fuente{Mini-Fig. 5 (12 hilos): Autores, Williams (\emph{split refcount}, \emph{lock-free}), \texttt{atomic<shared\_ptr>} de GCC 13 (Libstdc++) y \texttt{std::mutex}. $n=1,u=1$: 39,1 · 5,3 · 1,6 · 6,1 Mop/s; $n=1,u=50$: 2,3 · 0,5 · 0,2 · 1,5. Autores gana a Williams en los 6 paneles. Tendencias, no cifras absolutas. Con $n = 10$, \texttt{bench.cpp} sufría compartición falsa (ver la réplica completa).}
 \end{frame}
 
 \begin{frame}{Pruebas en local (3): latencia con 12 hilos}
   \centering\includegraphics[width=0.72\linewidth]{graficos/local_latencia.pdf}
-  \fuente{Mini-Fig. 6: 1 hilo mide y 11 hacen \texttt{store}; 100\,000 muestras. \texttt{load} (mediana / p99): Autores 269 ns / 0,83\us · Libstdc++ 3,06\us{} / 16\us · Mutex 61 ns / \textbf{27,6\us}. La mediana engaña; la cola delata a quien espera.}
+  \fuente{Mini-Fig. 6: 1 hilo mide y 11 hacen \texttt{store}; 100\,000 muestras. \texttt{load} (mediana / p99): Autores 308 ns / 0,93\us · Williams 1,64\us{} / 6,1\us · Libstdc++ 3,19\us{} / 20\us · Mutex 118 ns / \textbf{25,8\us}. La mediana engaña; la cola delata a quien espera.}
 \end{frame}
 
-\begin{frame}{¿Coincide con el paper?}
-  \begin{columns}[T]
-    \column{0.5\textwidth}
-    \textbf{\textcolor{ok}{Se reproduce}}
-    \begin{itemize}\small
-      \item El código de los autores: \textbf{0 errores} con AddressSanitizer; la versión ingenua cae enseguida.
-      \item Con 1 hilo es la más rápida en los seis paneles.
-      \item Gana con claridad a la versión con candados (GCC): con 1 pila, $u = 1$ y 12 hilos, 34,3 frente a 2,2 Mop/s.
-      \item Latencia con contención: mediana y cola muy por debajo de GCC; cola mucho más corta que el mutex.
-    \end{itemize}
-    \column{0.47\textwidth}
-    \textbf{\textcolor{acento}{Matices}}
-    \begin{itemize}\small
-      \item Con 1 pila y 50 \% de actualizaciones, el mutex la supera (2,9 frente a 2,2 Mop/s): el CAS \emph{lock-free} reintenta, como reconoce el paper.
-      \item 12 hilos, no 144: la contención es menor y no hay sobresuscripción grande.
-      \item Sin Folly, Williams ni Anderson (dependencias pesadas); WSL en Windows.
-      \item Mediciones de un solo equipo y una sola ejecución: tendencias, no cifras absolutas.
-    \end{itemize}
-  \end{columns}
-\end{frame}
+\input{replica_completa_frames}
 
 \begin{frame}{Relación con el \emph{split reference count}}
   \begin{columns}[T]
@@ -595,7 +577,7 @@ config.store(std::make_shared<Config>(n));
     \item El conteo de referencias con variables mutables puede ser \clave{wait-free sin retrasar la liberación}.
     \item La clave: un \textbf{peso prepagado} en el propio puntero; leer y apuntarse son una sola instrucción.
     \item La recarga termina en como mucho $P$ intentos gracias a R-1 ($C \ge 2P$) y R-2 (salida temprana).
-    \item Funciona en la práctica: lo comprobamos en local con el código original (sin errores y mucho más rápido que la versión con candados bajo contención).
+    \item Funciona en la práctica: lo comprobamos en local y en una \textbf{réplica completa} (Ultra 9 285, binarios oficiales, con y sin Docker): correcto, cumple su cota, no deja basura y lee rápido. No se sostiene su ventaja frente a Folly ni con $n = 10^6$.
   \end{enumerate}
   \bigskip
   \textbf{Para discutir}

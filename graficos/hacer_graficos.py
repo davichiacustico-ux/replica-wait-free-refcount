@@ -33,8 +33,8 @@ def rendimiento():
         ax.set_xlabel("número de hilos")
     for ax in ejes[:, 0]:
         ax.set_ylabel("Mop/s")
-    ejes[0, 0].legend(loc="upper center", bbox_to_anchor=(1.7, 1.38), ncol=3, frameon=False)
-    fig.tight_layout()
+    fig.legend(*ejes[0, 0].get_legend_handles_labels(), loc="upper center", ncol=4, frameon=False)
+    fig.tight_layout(rect=(0, 0, 1, 0.93))
     fig.savefig(OUT / "local_rendimiento.pdf", metadata=META, bbox_inches="tight")
     plt.close(fig)
 

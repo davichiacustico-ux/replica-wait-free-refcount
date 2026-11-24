@@ -1,0 +1,93 @@
+% Diapositivas de la réplica completa (Intel Core Ultra 9 285), compartidas por las tres presentaciones.
+% Fuente de todas las cifras: replica/completa/EXPLICACION.md (Partes 0, 4, 6 y 7) y
+% replica/resultados/david-ultra9-285/tablas.md. Se incluye con \input{replica_completa_frames}.
+% Si el documento define \cortatrue antes del \input, solo salen montaje, rendimiento y veredicto.
+\providecommand{\rutareplica}{replica/resultados/david-ultra9-285/figuras}
+\providecommand{\veces}{\texttimes}
+
+\begin{frame}{Réplica completa: el montaje}
+  \begin{columns}[T]
+    \column{0.5\textwidth}\small
+    \begin{itemize}
+      \item Intel Core Ultra 9 285: \textbf{24 núcleos} (8 P y 16 E en 4 clústeres de 4), un solo módulo de RAM.
+      \item \textbf{Binarios oficiales} del artefacto de Zenodo: los 5 algoritmos del paper (Autores, Libstdc++, Williams, Folly, Anderson). No es una reimplementación.
+      \item Todo dos veces: \textbf{con Docker y sin Docker}. Además, el \texttt{bench.cpp} del equipo como control.
+      \item Los 4 sockets del paper se \textbf{simulan} colocando hilos en clústeres de núcleos E.
+    \end{itemize}
+    \column{0.46\textwidth}\footnotesize
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{@{}lrr@{}}
+      \toprule
+      Tanda & Mediciones & Fallidas\\
+      \midrule
+      Con Docker, oficiales & 3\,720 & 0\\
+      Sin Docker, oficiales & 4\,660 & 0\\
+      Sin Docker, \texttt{bench.cpp} & 2\,976 & 0\\
+      \texttt{bench.cpp} alineado & 2\,160 & 0\\
+      Controles & 546 & 0\\
+      \bottomrule
+    \end{tabular}
+    \par\medskip
+    \textbf{Adaptaciones:} hilos del paper divididos entre 6 (24 = toda la máquina, como 144); 5 rondas de 2\,s en orden aleatorio en vez de 7 de 10\,s; latencia con $p = 24$.
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Réplica completa: rendimiento frente al paper}
+  \centering\includegraphics[width=0.86\linewidth]{\rutareplica/fig5_paper_frente_a_replica.png}
+  \fuente{Rendimiento de cada rival relativo a Autores (1 = igual; a la derecha gana el rival). Huecos: paper (144 hilos); rellenos: réplica (24 hilos). Gana con claridad a Libstdc++ (0,06\veces{} a 0,16\veces) y a Williams (0,24\veces{} a 0,73\veces). Frente a Folly: gana 3, empata 2 y pierde 1. Anderson gana con mucha contención (1,87\veces{} a 1,99\veces). Sin Docker, lo mismo.}
+\end{frame}
+
+\ifcorta\else
+\begin{frame}{Réplica completa: latencia}
+  \begin{columns}[c]
+    \column{0.62\textwidth}
+    \includegraphics[width=\linewidth]{\rutareplica/fig6_replica.png}
+    \column{0.36\textwidth}\small
+    \begin{itemize}
+      \item \texttt{load}: Autores, el más bajo en los tres casos. Con contención, por poco: con 15 rondas sus rangos se solapan con Anderson y Folly.
+      \item \texttt{store} con $p = 1$: cuarto de cinco, por 5\,ns (el paper decía segundo).
+      \item Williams, medido con \texttt{-mcx16}: sin contención es el peor; con contención, \textbf{no}.
+    \end{itemize}
+    \fuente{Fig.~6 de la réplica (con Docker): arriba $p = 1$; abajo $p = 24$, escala logarítmica.}
+  \end{columns}
+\end{frame}
+\fi
+
+\begin{frame}{Réplica completa: ¿coincide con el paper?}
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+    \textbf{\textcolor{ok}{Se reproduce (9 de 15)}}
+    \begin{itemize}\footnotesize
+      \item Sin \emph{use-after-free}: 0 errores con ASan y TSan.
+      \item Cota \emph{wait-free}: como mucho 8 reintentos, con una cota de 32.
+      \item Sin memoria extra; Anderson retiene hasta 469\,KB.
+      \item Más rápido que Libstdc++ y que Williams.
+      \item Gana a Anderson con pocas escrituras; Anderson gana con mucha contención.
+      \item \texttt{load} con la menor latencia (con contención, por poco).
+    \end{itemize}
+    \textbf{\textcolor{acento}{En parte (2):}}\ \footnotesize \texttt{store} con contención (empate con Anderson) y «Williams casi siempre peor».
+    \column{0.47\textwidth}
+    \textbf{\textcolor{mal}{No se reproduce (3)}}
+    \begin{itemize}\footnotesize
+      \item Superar a \textbf{Folly}: gana 3, empata 2 y pierde 1; la brecha ya existe con 1 hilo.
+      \item Superar a Anderson con $n = 10^6$: pierde hasta 18 hilos, empata desde 24.
+      \item \texttt{store} segundo con $p = 1$: aquí es cuarto.
+    \end{itemize}
+    \textbf{No se confirma (1):}\ \footnotesize la mejora de \texttt{store \& reclaim} con contención (1--4\,\%, dentro del ruido).
+    \par\medskip\small
+    \textbf{En una frase:} el algoritmo es correcto, cumple su cota, no deja basura y lee rápido; no se sostiene su ventaja frente a Folly ni con muchísimas pilas.
+  \end{columns}
+\end{frame}
+
+\ifcorta\else
+\begin{frame}{Réplica completa: lo que salió por el camino}
+  \begin{enumerate}\small
+    \item \textbf{Nuestro \texttt{bench.cpp} tenía compartición falsa}: 10 pilas en 2 líneas de caché. Con \texttt{alignas(128)}, Autores pasa de 32 a 119\,Mop/s (el oficial da 122).
+    \item \textbf{El binario oficial de latencia se compila sin \texttt{-mcx16}}: Williams llevaba un candado escondido. Corregido, cambia el veredicto: con contención no es el peor.
+    \item \textbf{Docker no cambia los resultados}: 259 de 270 puntos de la fig.~5 difieren menos de un 10\,\%.
+    \item \textbf{Importa compartir caché, no tanto la distancia}: dos hilos que comparten L2 rinden casi el doble que cualquier otra pareja.
+    \item \textbf{Con un millón de pilas, el techo es la RAM}: Anderson, Libstdc++ y Folly llegan a 33--34 de los 37\,GB/s que da este PC.
+  \end{enumerate}
+  \fuente{Limitaciones: 24 núcleos y no 144, sin 4 sockets reales ni NUMA, un solo canal de RAM y recortes de tiempo validados (desvío de $-10$ a $+19$\,\%). Preguntas abiertas: por qué Folly rinde aquí mucho más que en el paper y por qué Williams se hunde entre clústeres.}
+\end{frame}
+\fi
